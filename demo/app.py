@@ -144,14 +144,14 @@ def pointcloud_server(path):
         points = load_pointcloud_with_color(f"./demo/static/models/{path}")
         xyz = points[:, :3]
         rgb = points[:, 3:6] / 255
-    elif 'nii' in path:
-        img_arr_t1,_ = loadnifti(os.path.split(path)[1],os.path.split(path)[0],type='float')
-        img_arr_t1 = img_arr_t1[:,:,121:122]
-        points = np.where(img_arr_t1)
-        xyz = np.array(points).T
-        rgb = img_arr_t1[points]
-        rgb /= np.max(rgb)
-        rgb = np.tile(rgb[:,np.newaxis],(1,3))
+    # elif 'nii' in path:
+    #     img_arr_t1,_ = loadnifti(os.path.split(path)[1],os.path.split(path)[0],type='float')
+    #     img_arr_t1 = img_arr_t1[:,:,121:122]
+    #     points = np.where(img_arr_t1)
+    #     xyz = np.array(points).T
+    #     rgb = img_arr_t1[points]
+    #     rgb /= np.max(rgb)
+    #     rgb = np.tile(rgb[:,np.newaxis],(1,3))
     elif 'test' in path:
         arr = np.ones((64,64,1),dtype='float')
         points = np.where(arr)
