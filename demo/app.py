@@ -21,7 +21,7 @@ from safetensors.torch import load_model
 
 from pc_sam.model.pc_sam import PointCloudSAM
 from pc_sam.utils.torch_utils import replace_with_fused_layernorm
-from utils import load_ply
+from utils import load_ply, load_pointcloud_with_color
 
 
 parser = argparse.ArgumentParser()
@@ -34,20 +34,21 @@ parser.add_argument(
     "--config", type=str, default="large", help="path to config file"
 )
 parser.add_argument("--config_dir", type=str, default="../configs")
+
 args, unknown_args = parser.parse_known_args()
 
 # run in demo dir with app.app
 # run in pointsam dir with what path? have to chdir instead
-if True:
-    os.chdir('./demo')
-os.environ['FLASK_APP'] = 'app.app'
+# if True:
+#     os.chdir('./demo')
+# os.environ['FLASK_APP'] = 'app.app'
 
 # PCSAM variables
 pc_xyz, pc_rgb = None, None
 prompts, labels = [], []
 prompt_mask = None
 obj_path = None
-output_dir = "results"
+output_dir = "demo/results"
 segment_mask = None
 masks = []
 
@@ -136,7 +137,11 @@ def pointcloud_server(path):
     global obj_path
     obj_path = path
     if 'ply' in path:
-        points = load_ply(f"./static/models/{path}")
+        points = load_ply(f"./demo/static/models/{path}")
+        xyz = points[:, :3]
+        rgb = points[:, 3:6] / 255
+    elif 'npy' in path:
+        points = load_pointcloud_with_color(f"./demo/static/models/{path}")
         xyz = points[:, :3]
         rgb = points[:, 3:6] / 255
     elif 'nii' in path:
