@@ -90,7 +90,8 @@ We provide a local demo for Point-SAM in [demo](./demo/). Some point cloud examp
 ```
 pip install flask flask-cors
 ```
-Run the backend with following commands from the project's directory, you can change `--host` and `--port` to your IP address. 
+Run the backend with following commands from the project's directory, you can change `--host` and `--port` to your IP address.
+Forget about demo/app_original.py, it is not working for now! 
 ```
 python demo/app.py --host localhost --port 5000 --pointcloud scene.ply --checkpoint ./pretrained
 
