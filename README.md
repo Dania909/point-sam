@@ -90,12 +90,12 @@ We provide a local demo for Point-SAM in [demo](./demo/). Some point cloud examp
 ```
 pip install flask flask-cors
 ```
-Run the backend with following commands, you can change `--host` and `--port` to your IP address. 
+Run the backend with following commands from the project's directory, you can change `--host` and `--port` to your IP address. 
 ```
-python demo/app.py --host localhost --port 5000 --pointcloud scene.ply --checkpoint ./pretrained/model.safetensors
-# python demo/app.py --host localhost --port 5000 --pointcloud rhino.ply --checkpoint ./pretrained/model.safetensors
-# python demo/app.py --host localhost --port 5000 --pointcloud tiko_10000_points.ply --checkpoint ./pretrained/model.safetensors
-# python demo/app.py --host localhost --port 5000 --pointcloud tiko_50000_points.ply --checkpoint ./pretrained/model.safetensors
+python demo/app.py --host localhost --port 5000 --pointcloud scene.ply --checkpoint ./pretrained
+
+python demo/app.py --host localhost --port 5000 --pointcloud rhino.ply --checkpoint ./pretrained
+
 ```
 
 ### Acknowledgement
