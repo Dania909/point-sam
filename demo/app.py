@@ -1,7 +1,7 @@
 # from point_sam import build_point_sam
 import sys
 import os
-
+import time
 # Add the project root (PointSam/) to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import numpy as np
@@ -50,6 +50,7 @@ prompt_mask = None
 obj_path = None
 output_dir = "demo/results"
 segment_mask = None
+union_mask = None
 masks = []
 
 # Flask Backend
@@ -191,20 +192,50 @@ def pointcloud_server(path):
 
 @app.route("/clear", methods=["POST"])
 def clear():
-    global prompts, labels, prompt_mask, segment_mask
+    global prompts, labels, prompt_mask, segment_mask, union_mask
     prompts, labels = [], []
     prompt_mask = None
     segment_mask = None
+    union_mask = None
     return jsonify({"status": "cleared"})
+
+@app.route("/union", methods=["POST"])
+def union():
+    global segment_mask, union_mask, prompts, labels, prompt_mask
+
+    if segment_mask is None:
+        return jsonify({"status": "no segment to accumulate"}), 400
+
+    # Accumulate the current segment into the union
+    if union_mask is None:
+        union_mask = segment_mask.clone()
+    else:
+        union_mask = torch.logical_or(union_mask, segment_mask)
+
+    # Reset current segmentation state (but keep the union)
+    segment_mask = None
+    prompts = []
+    labels = []
+    prompt_mask = None
+
+    return jsonify({"status": "segment accumulated and reset"})
 
 
 @app.route("/next", methods=["POST"])
 def next():
-    global prompts, labels, segment_mask, masks, prompt_mask
-    masks.append(segment_mask.cpu().numpy())
+    global prompts, labels, segment_mask, masks, prompt_mask, union_mask
+    if union_mask is not None:
+        masks.append(union_mask.cpu().numpy())
+    elif segment_mask is not None:
+        masks.append(segment_mask.cpu().numpy())
+    else:
+        return jsonify({"status": "no mask to append"}), 400
+
+    union_mask = None
     prompts, labels = [], []
     prompt_mask = None
-    return jsonify({"status": "cleared"})
+    segment_mask = None
+    return jsonify({"status": "next mask saved"})
 
 
 @app.route("/save", methods=["POST"])
@@ -214,8 +245,9 @@ def save():
     xyz = pc_xyz[0].cpu().numpy()
     rgb = pc_rgb[0].cpu().numpy()
     masks = np.stack(masks)
-    obj_path = obj_path.split(".")[0]
-    np.save(f"{output_dir}/{obj_path}.npy", {"xyz": xyz, "rgb": rgb, "mask": masks})
+    timestamp = int(time.time())
+    unique_path = f"{output_dir}/{timestamp}_{obj_path}"
+    np.save(unique_path, {"xyz": xyz, "rgb": rgb, "mask": masks})
     global prompts, labels, prompt_mask
     prompts, labels = [], []
     prompt_mask = None
