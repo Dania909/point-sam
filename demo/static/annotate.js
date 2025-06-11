@@ -50,6 +50,18 @@ async function reset() {
   });
 }
 
+async function onUnionClick() {
+  await fetch("/union", {
+    method: "POST",
+  }).then((response) => {
+    if (!response.ok) {
+      console.error("Union request failed.");
+    } else {
+      console.log("Mask accumulated (unioned).");
+    }
+  });
+}
+
 function bindButtons() {
   var negative_button = document.getElementById("annotate-negative");
   negative_button.onclick = onNegativeClick;
@@ -61,6 +73,8 @@ function bindButtons() {
   reset_button.onclick = reset;
   var next_button = document.getElementById("annotate-next");
   next_button.onclick = onNextClick;
+  var union_button = document.getElementById("annotate-union");
+  union_button.onclick = onUnionClick;
 }
 
 function main() {
