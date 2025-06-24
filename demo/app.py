@@ -90,7 +90,7 @@ else:
     # ---------------------------------------------------------------------------- #
     load_model(sam, os.path.join(args.checkpoint,'model.safetensors'))
     sam.eval()
-    sam.cuda()
+    # sam.cuda()
 
 @app.route("/")
 def index():
@@ -177,8 +177,8 @@ def pointcloud_server(path):
     # set pcsam variables
     global pc_xyz, pc_rgb, data
     pc_xyz, pc_rgb = (
-        torch.from_numpy(xyz).cuda().float(),
-        torch.from_numpy(rgb).cuda().float(),
+        torch.from_numpy(xyz).float(),
+        torch.from_numpy(rgb).float(),
     )
     pc_xyz, pc_rgb = pc_xyz.unsqueeze(0), pc_rgb.unsqueeze(0)
     # data = {"xyz": points, "rgb": colors, "mask": labels}
