@@ -122,8 +122,8 @@ def sampled_pc():
 
     global pc_xyz, pc_rgb, data
     pc_xyz, pc_rgb = (
-        torch.from_numpy(points).cuda().float(),
-        torch.from_numpy(colors).cuda().float(),
+        torch.from_numpy(points).float(),
+        torch.from_numpy(colors).float(),
     )
     pc_xyz, pc_rgb = pc_xyz.unsqueeze(0), pc_rgb.unsqueeze(0)
     data = {"xyz": points, "rgb": colors, "mask": labels}
@@ -267,8 +267,8 @@ def segment():
     prompts.append(prompt_point)
     labels.append(prompt_label)
 
-    prompt_points = torch.from_numpy(np.array(prompts)).cuda().float()[None, ...]
-    prompt_labels = torch.from_numpy(np.array(labels)).cuda()[None, ...]
+    prompt_points = torch.from_numpy(np.array(prompts)).float()[None, ...]
+    prompt_labels = torch.from_numpy(np.array(labels))[None, ...]
 
     data = {
         "points": pc_xyz,

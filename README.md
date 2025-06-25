@@ -45,9 +45,32 @@ Our model support mesh segmentation by sampling points from the mesh and propaga
   <img src="./assets/outdoor-ezgif.com-video-to-gif-converter.gif" width="49%"/>
 </p>
 
+
+
+## 🔧 Changes and Important Notes from Dania
+
+- Re-tested and cleaned dependencies: CUDA was disabled (no NVIDIA GPU).
+
+- Created a working virtual environment called `Testenv` with CPU support.
+- Added `torkit3d` using `FORCE_CUDA=0` to prevent GPU-related crashes.
+
+### Important: Pretrained Model Not Included
+You must **manually download the pretrained model** (`model.safetensors`) and place it in the `pretrained/` directory. This file is **not included** in the GitHub repository.
+
+```bash
+# Example expected path:
+pretrained/model.safetensors
+```
+
+Download link: [https://huggingface.co/yuchen0187/Point-SAM/tree/main](https://huggingface.co/yuchen0187/Point-SAM/tree/main)
+ 
+
 ### Installation
 The code requires `python>=3.8`, `timm>=0.9.0`, `pytorch>=2.1.0`, `torchvision>=0.16.0`. Please follow the offcial guide to install Pytorch, timm and TorchVision dependencies. We also recommend compiling third partiy modules with `g++=9.3.0`.
 
+# Use conda environment file
+conda env create -f environment.yml
+conda activate Testenv
 Install third party modules.
 ```
 # Install g++=9.3.0 in conda environment by
@@ -55,10 +78,7 @@ conda install gxx_linux-64=9.3.0
 # Install torkit3d
 git submodule update --init third_party/torkit3d && 
 FORCE_CUDA=1 pip install third_party/torkit3d &&
-# Install apex
-git submodule update --init third_party/apex &&
-pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" third_party/apex
-```
+
 
 ### Getting Start
 
