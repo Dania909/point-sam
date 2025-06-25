@@ -47,7 +47,7 @@ Our model support mesh segmentation by sampling points from the mesh and propaga
 
 
 
-## 🔧 Changes and Important Notes from Dania
+## 🔧 Changes 
 
 - Re-tested and cleaned dependencies: CUDA was disabled (no NVIDIA GPU).
 
